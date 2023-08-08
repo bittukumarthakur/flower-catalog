@@ -1,42 +1,43 @@
 const { readFileSync } = require("node:fs");
 
-const respondHomePage = (request, response) => {
-  const body = readFileSync("./resources/home-page.html", "utf-8");
+const serveFile = (filepath, response) => {
+  const body = readFileSync(filepath, "utf-8");
   response.setBody(body);
   response.setStatusCode(200);
   response.send();
 };
 
-const respondAbeliophyllumPage = (request, response) => {
-  const body = readFileSync("./resources/abeliophyllum.html", "utf-8");
-  response.setBody(body);
-  response.setStatusCode(200);
-  response.send();
+const respondHomePage = (response) => {
+  const filepath = "./resources/home-page.html";
+  serveFile(filepath, response);
 };
 
-const respondAgeratumPage = (request, response) => {
-  const body = readFileSync("./resources/ageratum.html", "utf-8");
-  response.setBody(body);
-  response.setStatusCode(200);
-  response.send();
+const respondAbeliophyllumPage = (response) => {
+  const filepath = "./resources/abeliophyllum.html";
+  serveFile(filepath, response);
+};
+
+const respondAgeratumPage = (response) => {
+  const filepath = "./resources/ageratum.html";
+  serveFile(filepath, response);
 };
 
 const handleRequest = (request, response) => {
   const { requestLine } = request;
-  console.log(request.requestLine.url);
+  console.log(request.requestLine);
 
   if (requestLine.url === "/") {
-    respondHomePage(request, response);
+    respondHomePage(response);
     return;
   };
 
   if (requestLine.url === "/abeliophyllum.html") {
-    respondAbeliophyllumPage(request, response);
+    respondAbeliophyllumPage(response);
     return;
   };
 
   if (requestLine.url === "/ageratum.html") {
-    respondAgeratumPage(request, response);
+    respondAgeratumPage(response);
     return;
   };
 
