@@ -14,18 +14,30 @@ const respondAbeliophyllumPage = (request, response) => {
   response.send();
 };
 
+const respondAgeratumPage = (request, response) => {
+  const body = readFileSync("./src/ageratum.html", "utf-8");
+  response.setBody(body);
+  response.setStatusCode(200);
+  response.send();
+};
+
+
 const handleRequest = (request, response) => {
   const { requestLine } = request;
   console.log(request.requestLine.url);
 
   if (requestLine.url === "/") {
-    console.log("home")
     respondHomePage(request, response);
     return;
   };
 
   if (requestLine.url === "/abeliophyllum.html") {
     respondAbeliophyllumPage(request, response);
+    return;
+  };
+
+  if (requestLine.url === "/ageratum.html") {
+    respondAgeratumPage(request, response);
     return;
   };
 
