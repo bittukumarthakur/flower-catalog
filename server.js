@@ -1,5 +1,5 @@
 const net = require("node:net");
-const { parseRequest } = require("./parse-request");
+const { parseRequest } = require("./src/parse-request");
 const PORT = 8000;
 
 const main = () => {
