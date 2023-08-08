@@ -62,7 +62,6 @@ class Response {
     this.setHeader("Content-length", contentLength);
 
     const response = this.#formatResponse();
-    console.log(response);
     this.#socket.write(response);
     this.#socket.end();
   }

@@ -1,6 +1,6 @@
 const parseRequestLine = (requestLine) => {
-  const [method, uri, protocol] = requestLine.split(" ");
-  return { method, uri, protocol };
+  const [method, url, protocol] = requestLine.split(" ");
+  return { method, url, protocol };
 };
 
 const parseHeaders = (headerLines) => {
