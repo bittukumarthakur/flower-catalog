@@ -1,7 +1,7 @@
 const net = require("node:net");
 const { parseRequest } = require("./src/parse-request");
 const { Response } = require("./src/response");
-const { RequestHandler, setRoutes } = require("./src/handle-request");
+const { serveFile } = require("./src/handle-request");
 const PORT = 8000;
 
 const requestLogger = (request) => {
@@ -10,8 +10,6 @@ const requestLogger = (request) => {
 
 const main = () => {
   const server = net.createServer();
-  const requestHandler = new RequestHandler();
-  setRoutes(requestHandler);
 
   server.on("connection", (socket) => {
     socket.setEncoding('utf-8');
@@ -20,7 +18,7 @@ const main = () => {
       const request = parseRequest(data);
       const response = new Response(socket);
       requestLogger(request);
-      requestHandler.handle(request, response);
+      serveFile(request, response);
     });
   });
 
