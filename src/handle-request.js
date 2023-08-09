@@ -43,52 +43,48 @@ const respondAgeratumPage = (response) => {
   serveFile(filepath, response);
 };
 
-const respondFavicon = (response) => {
-  const filepath = "./resources/favicon.ico";
-  const img = readFileSync(filepath);
-  response.setBody(img);
+const serveImage = (filepath, response) => {
+  const image = readFileSync(filepath);
+  response.setBody(image);
   response.setStatusCode(200);
   response.send();
+};
+
+const respondFavicon = (response) => {
+  const filepath = "./resources/favicon.ico";
+  serveImage(filepath, response);
 };
 
 const respondHomepageFlower = (response) => {
   const filepath = "./resources/home-page-flower.jpg";
-  const img = readFileSync(filepath);
-  response.setBody(img);
-  response.setStatusCode(200);
-  response.send();
-}
+  serveImage(filepath, response);
+};
 
-const handleRequest = (request, response) => {
-  const { requestLine } = request;
-  console.log(requestLine);
-  if (requestLine.url === "/") {
-    respondHomePage(response);
-    return;
-  };
+const abeliophyllumFlowerImage = (response) => {
+  const filepath = "./resources/abeliophyllum.jpg";
+  serveImage(filepath, response);
+};
 
-  if (requestLine.url === "/abeliophyllum") {
-    respondAbeliophyllumPage(response);
-    return;
-  };
+const ageratumFlowerImage = (response) => {
+  const filepath = "./resources/ageratum.jpg";
+  serveImage(filepath, response);
+};
 
-  if (requestLine.url === "/ageratum") {
-    respondAgeratumPage(response);
-    return;
-  };
+const handleRequest = (request, response, requestHandler) => {
+  console.log(request.requestLine);
 
-  if (requestLine.url === "/favicon.ico") {
-    respondFavicon(response);
-    return;
-  };
+  requestHandler.route("/", respondHomePage);
+  requestHandler.route("/abeliophyllum", respondAbeliophyllumPage);
+  requestHandler.route("/ageratum", respondAgeratumPage);
+  requestHandler.route("/favicon.ico", respondFavicon);
+  requestHandler.route("/home-page-flower-image", respondHomepageFlower);
+  requestHandler.route("/abeliophyllum-image", abeliophyllumFlowerImage);
+  requestHandler.route("/ageratum-image", ageratumFlowerImage);
 
-  if (requestLine.url === "/home-page-flower") {
-    respondHomepageFlower(response);
-    return;
-  };
-
+  requestHandler.handle(request, response);
 };
 
 module.exports = {
   handleRequest,
+  RequestHandler
 };
