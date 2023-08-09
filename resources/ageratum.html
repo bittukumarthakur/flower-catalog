@@ -7,7 +7,13 @@
   <title>Document</title>
 
   <style>
+    * {
+      padding: 0;
+      margin: 0 auto;
+    }
+
     header {
+      margin-top: 1em;
       text-align: center;
       border-bottom: 2px solid black;
       color: orange;
@@ -15,11 +21,15 @@
     }
 
     #page {
+      display: flex;
+      flex-wrap: wrap;
       margin: 2em auto;
-      width: 65%;
       font-size: 1.5em;
       line-height: 1.5em;
+    }
 
+    #flower-description {
+      width: 50%;
     }
   </style>
 
@@ -33,19 +43,24 @@
     </h1>
   </header>
 
-  <div>
+  <div id="page">
     <img src="/ageratum-image" alt="abeliophyllum image">
-    <p id="page">
-      Ageratum, (whiteweed in the USA), is a genus of 40[3] to 60 tropical and warm temperate flowering annuals and
-      perennials from the family Asteraceae, tribe Eupatorieae. Most species are native to Central America and Mexico
-      but four are native to the United States.
+    <div id="flower-description">
+      <p>
+        Ageratum, (whiteweed in the USA), is a genus of 40[3] to 60 tropical and warm temperate flowering annuals and
+        perennials from the family Asteraceae, tribe Eupatorieae. Most species are native to Central America and Mexico
+        but four are native to the United States.
 
-      They form tussocks or small hills. They grow to a height of 30 in. The opposite leaves are cordate or oval, hairy
-      or tomentose. The margins are slightly toothed or serrate. The leaves form compact clusters.
+        They form tussocks or small hills. They grow to a height of 30 in. The opposite leaves are cordate or oval,
+        hairy
+        or tomentose. The margins are slightly toothed or serrate. The leaves form compact clusters.
 
-      The fluffy flowers are lavender-blue, pink, lilac, or white; and spread in small compound umbels. They give small,
-      dry fruits.
-    </p>
+        The fluffy flowers are lavender-blue, pink, lilac, or white; and spread in small compound umbels. They give
+        small,
+        dry fruits.
+      </p>
+    </div>
+
   </div>
 </body>
 

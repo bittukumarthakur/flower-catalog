@@ -21,10 +21,23 @@ class RequestHandler {
   }
 };
 
+const CONTENT_TYPE = {
+  ".html": "text/html",
+  ".ico": "image/vnd.microsoft.icon",
+  ".jpg": "image/jpeg"
+};
+
+const getContentType = (filepath) => {
+  const [extension] = filepath.match(/\.[^.]*$/);
+  return CONTENT_TYPE[extension];
+};
+
 const serveFile = (filepath, response) => {
-  const body = readFileSync(filepath, "utf-8");
+  const body = readFileSync(filepath);
+  const contentType = getContentType(filepath);
   response.setBody(body);
   response.setStatusCode(200);
+  response.setHeader("Content-Type", contentType);
   response.send();
 };
 
@@ -43,36 +56,27 @@ const respondAgeratumPage = (response) => {
   serveFile(filepath, response);
 };
 
-const serveImage = (filepath, response) => {
-  const image = readFileSync(filepath);
-  response.setBody(image);
-  response.setStatusCode(200);
-  response.send();
-};
-
 const respondFavicon = (response) => {
-  const filepath = "./resources/favicon.ico";
-  serveImage(filepath, response);
+  const filepath = "./resources/image/favicon.ico";
+  serveFile(filepath, response);
 };
 
 const respondHomepageFlower = (response) => {
-  const filepath = "./resources/home-page-flower.jpg";
-  serveImage(filepath, response);
+  const filepath = "./resources/image/home-page-flower.jpg";
+  serveFile(filepath, response);
 };
 
 const abeliophyllumFlowerImage = (response) => {
-  const filepath = "./resources/abeliophyllum.jpg";
-  serveImage(filepath, response);
+  const filepath = "./resources/image/abeliophyllum.jpg";
+  serveFile(filepath, response);
 };
 
 const ageratumFlowerImage = (response) => {
-  const filepath = "./resources/ageratum.jpg";
-  serveImage(filepath, response);
+  const filepath = "./resources/image/ageratum.jpg";
+  serveFile(filepath, response);
 };
 
-const handleRequest = (request, response, requestHandler) => {
-  console.log(request.requestLine);
-
+const setRoutes = (requestHandler) => {
   requestHandler.route("/", respondHomePage);
   requestHandler.route("/abeliophyllum", respondAbeliophyllumPage);
   requestHandler.route("/ageratum", respondAgeratumPage);
@@ -80,11 +84,9 @@ const handleRequest = (request, response, requestHandler) => {
   requestHandler.route("/home-page-flower-image", respondHomepageFlower);
   requestHandler.route("/abeliophyllum-image", abeliophyllumFlowerImage);
   requestHandler.route("/ageratum-image", ageratumFlowerImage);
-
-  requestHandler.handle(request, response);
 };
 
 module.exports = {
-  handleRequest,
+  setRoutes,
   RequestHandler
 };
