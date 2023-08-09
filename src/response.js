@@ -51,7 +51,8 @@ class Response {
     response += responseLine + newLine;
     response += headers + newLine;
     response += newLine;
-    response += this.#messageBody;
+
+    // response += this.#messageBody;
     return response;
   }
 
@@ -63,6 +64,7 @@ class Response {
 
     const response = this.#formatResponse();
     this.#socket.write(response);
+    this.#socket.write(this.#messageBody);
     this.#socket.end();
   }
 };
