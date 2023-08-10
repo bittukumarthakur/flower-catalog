@@ -4,6 +4,7 @@ const FILE_EXTENSIONS = {
   ".html": { "Content-Type": "text/html" },
   ".ico": { "Content-Type": "image/vnd.microsoft.icon" },
   ".jpg": { "Content-Type": "image/jpeg" },
+  ".jpeg": { "Content-Type": "image/jpeg" },
   ".pdf": { "Content-Type": "application/pdf", "Content-Disposition": "attachment" }
 };
 
@@ -12,28 +13,22 @@ const getHeaders = (filepath) => {
   return FILE_EXTENSIONS[extension];
 };
 
-const pageNotFound = (response) => {
-  response.setBody("page not found");
-  response.setStatusCode(404);
-  response.send();
-};
-
 const serveFile = (filepath, response) => {
   readFile(filepath, (error, body) => {
     if (error) {
-      pageNotFound(response);
+      response.statusCode = 404;
+      response.end("Not Found");
       return;
     };
 
-    response.setBody(body);
-    response.setStatusCode(200);
-    response.setHeaders(getHeaders(filepath));
-    response.send();
+    response.writeHead(200, getHeaders(filepath));
+    response.end(body);
   });
 };
 
 const handleRequest = (request, response) => {
-  const { url } = request.requestLine;
+  const { url } = request;
+  console.log({ url });
   if (url === "/") {
     serveFile("./index.html", response);
     return;

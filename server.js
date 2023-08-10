@@ -1,29 +1,11 @@
-const net = require("node:net");
-const { parseRequest } = require("./src/parse-request");
-const { Response } = require("./src/response");
-const { handleRequest } = require("./src/handle-request");
-const PORT = 8000;
-
-const requestLogger = (request) => {
-  console.log(request.requestLine);
-};
+const http = require("node:http");
+const { handleRequest } = require("./src/handler");
 
 const main = () => {
-  const server = net.createServer();
+  const server = http.createServer(handleRequest);
 
-  server.on("connection", (socket) => {
-    socket.setEncoding('utf-8');
-
-    socket.on("data", (data) => {
-      const request = parseRequest(data);
-      const response = new Response(socket);
-      requestLogger(request);
-      handleRequest(request, response);
-    });
-  });
-
-  server.listen(PORT, () => {
-    console.log("listening port:", PORT);
+  server.listen(8000, () => {
+    console.log("Listening on:", 8000);
   });
 };
 
