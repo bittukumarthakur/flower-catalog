@@ -28,8 +28,8 @@ class Response {
     this.#statusMessage = statusMessages[code];
   }
 
-  setHeader(title, value) {
-    this.#headers[title] = value;
+  setHeaders(headers) {
+    this.#headers = { ...headers, ...this.#headers };
   }
 
   #formatHeaders() {
@@ -59,9 +59,7 @@ class Response {
   send() {
     const date = new Date().toGMTString();
     const contentLength = this.#messageBody.length;
-    this.setHeader("DATE", date);
-    this.setHeader("Content-length", contentLength);
-
+    this.setHeaders({ DATE: date, "Content-length": contentLength });
     const response = this.#formatResponse();
     this.#socket.write(response);
     this.#socket.write(this.#messageBody);
