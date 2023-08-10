@@ -1,7 +1,7 @@
 const net = require("node:net");
 const { parseRequest } = require("./src/parse-request");
 const { Response } = require("./src/response");
-const { serveFile } = require("./src/handle-request");
+const { handleRequest } = require("./src/handle-request");
 const PORT = 8000;
 
 const requestLogger = (request) => {
@@ -18,7 +18,7 @@ const main = () => {
       const request = parseRequest(data);
       const response = new Response(socket);
       requestLogger(request);
-      serveFile(request, response);
+      handleRequest(request, response);
     });
   });
 

@@ -1,30 +1,10 @@
-const { readFileSync } = require("node:fs");
-
-class RequestHandler {
-  #routes;
-  constructor() {
-    this.#routes = {};
-  }
-
-  route(path, handler) {
-    this.#routes[path] = handler;
-  }
-
-  #findHandler(path) {
-    return this.#routes[path];
-  }
-
-  handle(request, response) {
-    const { requestLine } = request;
-    const handler = this.#findHandler(requestLine.url);
-    handler(request, response);
-  }
-};
+const { readFile } = require("node:fs");
 
 const CONTENT_TYPE = {
   ".html": "text/html",
   ".ico": "image/vnd.microsoft.icon",
-  ".jpg": "image/jpeg"
+  ".jpg": "image/jpeg",
+  ".pdf": "application/pdf"
 };
 
 const getContentType = (filepath) => {
@@ -32,27 +12,43 @@ const getContentType = (filepath) => {
   return CONTENT_TYPE[extension];
 };
 
-const serveFileByPath = (filepath, response) => {
-  const body = readFileSync(filepath);
-  const contentType = getContentType(filepath);
-  response.setBody(body);
-  response.setStatusCode(200);
-  response.setHeader("Content-Type", contentType);
+const pageNotFound = (response) => {
+  response.setBody("page not found");
+  response.setStatusCode(404);
   response.send();
+}
+
+const serveFile = (filepath, response) => {
+  readFile(filepath, (error, body) => {``
+    if (error) {
+      pageNotFound(response);
+      return;
+    };
+
+    const contentType = getContentType(filepath);
+    if (contentType === "application/pdf") {
+      response.setHeader("Content-Disposition", "attachment");
+    };
+
+    response.setBody(body);
+    response.setStatusCode(200);
+    response.setHeader("Content-Type", contentType);
+    response.send();
+  });
 };
 
-const serveFile = (request, response) => {
+const handleRequest = (request, response) => {
   const { url } = request.requestLine;
   if (url === "/") {
-    serveFileByPath("./resources/html/home-page.html", response);
+    serveFile("./index.html", response);
     return;
   };
 
   const path = "." + url;
-  serveFileByPath(path, response);
+  serveFile(path, response);
   return;
 };
 
 module.exports = {
-  serveFile
+  handleRequest
 };
