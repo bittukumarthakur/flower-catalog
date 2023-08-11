@@ -5,6 +5,7 @@ const FILE_EXTENSIONS = {
   ".ico": { "Content-Type": "image/vnd.microsoft.icon" },
   ".jpg": { "Content-Type": "image/jpeg" },
   ".jpeg": { "Content-Type": "image/jpeg" },
+  ".gif": { "Content-Type": "image/gif" },
   ".pdf": { "Content-Type": "application/pdf", "Content-Disposition": "attachment" }
 };
 
@@ -26,11 +27,11 @@ const serveFile = (filepath, response) => {
   });
 };
 
-const handleRequest = (request, response) => {
+const handle = (request, response) => {
   const { url } = request;
-  console.log({ url });
+
   if (url === "/") {
-    serveFile("./index.html", response);
+    serveFile("./resources/page/index.html", response);
     return;
   };
 
@@ -40,5 +41,5 @@ const handleRequest = (request, response) => {
 };
 
 module.exports = {
-  handleRequest
+  handle
 };
