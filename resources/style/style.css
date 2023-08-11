@@ -1,0 +1,38 @@
+* {
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+header {
+  font-size: 1.5em;
+  text-align: center;
+  padding: .5em;
+  border-bottom: 2px solid black;
+  color: orange;
+}
+
+.page {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+li {
+  font-size: 1.5em;
+  line-height: 1.8em;
+}
+
+.hide {
+  display: none;
+}
+
+.flower-image {
+  margin: .5em;
+  width: 35%;
+  border-radius: 1em;
+}
+
+.flower-description {
+  padding: .5em;
+  width: 60%;
+  font-size: 2em;
+}
