@@ -1,5 +1,5 @@
 const { readFile } = require("node:fs");
-const { handleGuestBook } = require("./handle-guest-book");
+const { handleGuestBook, serveGuestBook } = require("./handle-guest-book");
 
 const FILE_EXTENSIONS = {
   ".html": { "Content-Type": "text/html" },
@@ -42,7 +42,13 @@ const handle = (request, response) => {
     return;
   };
 
-  if (url.startsWith("/guest-book")) {
+  if (url === "/guest-book") {
+    serveGuestBook(request, response);
+    return;
+  };
+
+
+  if (url.startsWith("/guest-book/add-comment")) {
     handleGuestBook(request, response);
     return;
   };
