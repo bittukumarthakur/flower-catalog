@@ -29,9 +29,14 @@ const serveFile = (filepath, response) => {
 
 const handle = (request, response) => {
   const { url } = request;
-
   if (url === "/") {
     serveFile("./resources/page/index.html", response);
+    return;
+  };
+
+  if (url.startsWith("/guest-book?")) {
+    console.log("hello");
+    response.end();
     return;
   };
 
