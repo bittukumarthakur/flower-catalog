@@ -1,4 +1,5 @@
 const { readFile } = require("node:fs");
+const { handleGuestBook } = require("./handle-guest-book");
 
 const FILE_EXTENSIONS = {
   ".html": { "Content-Type": "text/html" },
@@ -27,16 +28,22 @@ const serveFile = (filepath, response) => {
   });
 };
 
+const getQueryParams = (url) => {
+  const [, queryString] = url.split("?");
+  return new URLSearchParams(queryString);
+};
+
 const handle = (request, response) => {
   const { url } = request;
+  request.queryParams = getQueryParams(url);
+
   if (url === "/") {
     serveFile("./resources/page/index.html", response);
     return;
   };
 
-  if (url.startsWith("/guest-book?")) {
-    console.log("hello");
-    response.end();
+  if (url.startsWith("/guest-book")) {
+    handleGuestBook(request, response);
     return;
   };
 
