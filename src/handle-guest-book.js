@@ -10,7 +10,7 @@ const generateCommentsElement = (comments) => {
     <td class="date">${date}</td>
     <td class="name">${name}</td>
     <td class="comment">${comment}</td>
-  </tr>`
+  </tr>`;
   });
 };
 
@@ -23,7 +23,7 @@ const serveGuestBook = (request, response) => {
 
 const saveComments = (comments) => {
   writeFile("./resources/users-message.json", JSON.stringify(comments), (error) => {
-    console.log("Error in saving comment:", error)
+    console.log("Error in saving comment:", error);
   });
 };
 
