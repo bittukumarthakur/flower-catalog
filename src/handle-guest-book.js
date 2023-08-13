@@ -1,33 +1,38 @@
-const { readFileSync, writeFileSync } = require("node:fs");
+const { writeFile } = require("node:fs");
 
 const getDate = () => {
   return new Date().toLocaleString();
 };
 
-const generateCommentsElements = (comments) => {
+const generateCommentsElement = (comments) => {
   return comments.map(({ name, date, comment }) => {
-    return `<p>${date},  ${name} ${comment}</p>`;
+    return `<tr>
+    <td class="date">${date}</td>
+    <td class="name">${name}</td>
+    <td class="comment">${comment}</td>
+  </tr>`
   });
 };
 
-const guestBookHtml = (comments) => {
-  const template = readFileSync("./resources/page/guest-book-template.html", "utf-8");
-  const commentsElement = generateCommentsElements(comments).join("");
-  return (template.replace("--comments", commentsElement));
-};
-
 const serveGuestBook = (request, response) => {
-  response.end(guestBookHtml(request.messageLog));
+  const { guestBookTemplate } = request;
+  const commentsElement = generateCommentsElement(request.messageLog).join("\n");
+  const guestBook = (guestBookTemplate.replace("--comments", commentsElement));
+  response.end(guestBook);
 };
 
 const saveComments = (comments) => {
-  writeFileSync("./resources/users-message.json", JSON.stringify(comments));
+  writeFile("./resources/users-message.json", JSON.stringify(comments), (error) => {
+    console.log("Error in saving comment:", error)
+  });
 };
 
 const redirectToGuestPage = (request, response) => {
   response.writeHead(302, { location: "/guest-book" });
   response.end();
 };
+
+const capitalizeWord = (word) => word[0].toUpperCase() + word.slice(1);
 
 const handleGuestBook = (request, response) => {
   const { queryParams } = request;
@@ -36,7 +41,7 @@ const handleGuestBook = (request, response) => {
   const comment = queryParams.get("comment");
   const date = getDate();
 
-  comments.unshift({ name, comment, date });
+  comments.unshift({ name: capitalizeWord(name), comment: capitalizeWord(comment), date });
   saveComments(comments);
   redirectToGuestPage(request, response);
 };

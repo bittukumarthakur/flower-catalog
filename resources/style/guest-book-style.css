@@ -1,6 +1,76 @@
 * {
   margin: 0px;
-  padding: 0px;
+  padding: 1.5px;
   box-sizing: border-box;
   font-size: 24px;
+}
+
+h1 {
+  font-size: 1.8em;
+}
+
+h2 {
+  font-size: 1.2em;
+  padding-left: 2em;
+}
+
+header {
+  height: 3em;
+  text-align: center;
+  border-bottom: 2px solid black;
+  color: orange;
+}
+
+form {
+  margin-left: 1em;
+}
+
+table {
+  border-collapse: collapse;
+  margin-left: 1em;
+}
+
+table tr:nth-child(even) {
+  background-color: rgba(128, 128, 128, 0.195);
+}
+
+th {
+  text-align: left;
+  background-color: rgb(128 128 128 / 44%);
+}
+
+td {
+  line-height: 1.3em;
+  border-bottom: 2px solid black;
+}
+
+.date {
+  width: 11em;
+}
+
+.name {
+  font-weight: bold;
+  width: 8em;
+}
+
+#comment-heading {
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  margin: .5em 0em;
+  padding: .2em 1em;
+}
+
+#comment-box {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1em 0em;
+}
+
+label[for=name] {
+  padding-left: 1.4em;
+}
+
+button {
+  margin: 0em 4.4em;
+  cursor: pointer;
 }
