@@ -1,18 +1,33 @@
 const { readFile } = require("node:fs");
 const { handleGuestBook, serveGuestBook } = require("./handle-guest-book");
 
-const FILE_EXTENSIONS = {
-  ".html": { "Content-Type": "text/html" },
-  ".ico": { "Content-Type": "image/vnd.microsoft.icon" },
-  ".jpg": { "Content-Type": "image/jpeg" },
-  ".jpeg": { "Content-Type": "image/jpeg" },
-  ".gif": { "Content-Type": "image/gif" },
-  ".pdf": { "Content-Type": "application/pdf", "Content-Disposition": "attachment" }
+const MIME_TYPE = {
+  html: "text/html",
+  icon: "image/vnd.microsoft.icon",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  gif: "image/gif",
+  pdf: "application/pdf",
+  css: "text/css",
+  js: "text/javascript"
+};
+
+const getContentType = (extensionType) => ({ "Content-Type": MIME_TYPE[extensionType] });
+
+const HEADERS = {
+  ".html": getContentType("html"),
+  ".ico": getContentType("icon"),
+  ".jpg": getContentType("jpg"),
+  ".jpeg": getContentType("jpeg"),
+  ".gif": getContentType("gif"),
+  ".css": getContentType("css"),
+  ".js": getContentType("js"),
+  ".pdf": { ...getContentType("pdf"), "Content-Disposition": "attachment" }
 };
 
 const getHeaders = (filepath) => {
   const [extension] = filepath.match(/\.[^.]*$/);
-  return FILE_EXTENSIONS[extension];
+  return HEADERS[extension];
 };
 
 const serveFile = (filepath, response) => {

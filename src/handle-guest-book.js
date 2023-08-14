@@ -1,14 +1,11 @@
 const { writeFile } = require("node:fs");
+const { generateCommentsElement } = require("./guest-book-template");
 
-const generateCommentsElement = (comments) => {
-  return comments.map(({ name, date, comment }) => {
-    return `<tr>
-    <td class="date">${date.toLocaleString()}</td>
-    <td class="name">${name}</td>
-    <td class="comment">${comment}</td>
-  </tr>`;
-  });
+const getDate = () => {
+  return new Date().toLocaleString();
 };
+
+const capitalizeWord = (word) => word[0].toUpperCase() + word.slice(1);
 
 const serveGuestBook = (request, response) => {
   const { guestBookTemplate } = request;
@@ -28,16 +25,14 @@ const redirectToGuestPage = (request, response) => {
   response.end();
 };
 
-const capitalizeWord = (word) => word[0].toUpperCase() + word.slice(1);
-
 const handleGuestBook = (request, response) => {
   const { queryParams } = request;
   const comments = request.messageLog;
   const name = queryParams.get("name");
   const comment = queryParams.get("comment");
-  const date = new Date();
+  const date = getDate();
 
-  comments.unshift({ name: capitalizeWord(name), comment: capitalizeWord(comment), date });
+  comments.unshift({ name: capitalizeWord(name), comment, date });
   saveComments(comments);
   redirectToGuestPage(request, response);
 };

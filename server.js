@@ -1,9 +1,10 @@
 const http = require("node:http");
 const { handle } = require("./src/handler");
 const { readFileSync } = require("node:fs");
+
 const PORT = 8000;
 
-const logger = (url) => console.log({ url: url });
+const logger = (response) => console.log({ url: response.url });
 
 const main = () => {
   const messageLog = JSON.parse(readFileSync("./resources/users-message.json"));
@@ -13,7 +14,7 @@ const main = () => {
     request.messageLog = messageLog;
     request.guestBookTemplate = guestBookTemplate;
 
-    logger(request.url);
+    logger(request);
     handle(request, response);
   });
 
