@@ -11,7 +11,7 @@ h1 {
 
 h2 {
   font-size: 1.2em;
-  padding-left: 2em;
+  padding: .2em 1em;
 }
 
 header {
@@ -35,22 +35,29 @@ table tr:nth-child(even) {
 }
 
 th {
+  line-height: 1.5em;
+  border-bottom: 2px solid black;
   text-align: left;
   background-color: rgb(128 128 128 / 44%);
 }
 
 td {
-  line-height: 1.3em;
-  border-bottom: 2px solid black;
+  line-height: 1.5em;
+  border-bottom: 1px solid black;
 }
 
 .date {
-  width: 11em;
+  width: 12em;
+  padding-left: 1em;
 }
 
 .name {
   font-weight: bold;
   width: 8em;
+}
+
+.comment {
+  padding-right: 1em;
 }
 
 #comment-heading {
@@ -63,7 +70,7 @@ td {
 #comment-box {
   display: flex;
   flex-wrap: wrap;
-  margin: 1em 0em;
+  margin: .5em 0em;
 }
 
 label[for=name] {

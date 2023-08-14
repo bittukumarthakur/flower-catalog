@@ -45,7 +45,7 @@ const handle = (request, response) => {
   if (url === "/guest-book") {
     serveGuestBook(request, response);
     return;
-  };  
+  };
 
   if (url.startsWith("/guest-book/comment")) {
     handleGuestBook(request, response);
