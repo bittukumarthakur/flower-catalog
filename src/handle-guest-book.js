@@ -16,7 +16,7 @@ const serveGuestBook = (request, response) => {
 
 const saveComments = (comments) => {
   writeFile("./resources/users-message.json", JSON.stringify(comments, null, 2), (error) => {
-    console.log("Error in saving comment:", error);
+    if (error) console.log("Error in saving comment:", error);
   });
 };
 
@@ -25,16 +25,29 @@ const redirectToGuestPage = (request, response) => {
   response.end();
 };
 
-const handleGuestBook = (request, response) => {
-  const { queryParams } = request;
-  const comments = request.messageLog;
-  const name = queryParams.get("name");
-  const comment = queryParams.get("comment");
-  const date = getDate();
+const parseParams = (params) => {
+  const commentLine = new URLSearchParams(params);
+  const name = commentLine.get("name");
+  const comment = commentLine.get("comment");
+  return { name, comment };
+};
 
-  comments.unshift({ name: capitalizeWord(name), comment, date });
-  saveComments(comments);
-  redirectToGuestPage(request, response);
+const handleGuestBook = (request, response) => {
+  const comments = request.messageLog;
+  let params = "";
+
+  request.on("data", (data) => {
+    params += data;
+  });
+
+  request.on("end", () => {
+    const { name, comment } = parseParams(params);
+    const date = getDate();
+
+    comments.unshift({ name: capitalizeWord(name), comment, date });
+    saveComments(comments);
+    redirectToGuestPage(request, response);
+  });
 };
 
 module.exports = {

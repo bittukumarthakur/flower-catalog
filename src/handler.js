@@ -3,7 +3,7 @@ const { handleGuestBook, serveGuestBook } = require("./handle-guest-book");
 
 const MIME_TYPE = {
   html: "text/html",
-  icon: "image/vnd.microsoft.icon",
+  ico: "image/vnd.microsoft.icon",
   jpg: "image/jpeg",
   jpeg: "image/jpeg",
   gif: "image/gif",
@@ -14,20 +14,10 @@ const MIME_TYPE = {
 
 const getContentType = (extensionType) => ({ "Content-Type": MIME_TYPE[extensionType] });
 
-const HEADERS = {
-  ".html": getContentType("html"),
-  ".ico": getContentType("icon"),
-  ".jpg": getContentType("jpg"),
-  ".jpeg": getContentType("jpeg"),
-  ".gif": getContentType("gif"),
-  ".css": getContentType("css"),
-  ".js": getContentType("js"),
-  ".pdf": { ...getContentType("pdf"), "Content-Disposition": "attachment" }
-};
-
 const getHeaders = (filepath) => {
-  const [extension] = filepath.match(/\.[^.]*$/);
-  return HEADERS[extension];
+  const extension = filepath.split(".").pop();
+  const pdfHeader = { ...getContentType("pdf"), "Content-Disposition": "attachment" };
+  return extension === "pdf" ? pdfHeader : getContentType(extension);
 };
 
 const serveFile = (filepath, response) => {
@@ -43,26 +33,20 @@ const serveFile = (filepath, response) => {
   });
 };
 
-const getQueryParams = (url) => {
-  const [, queryString] = url.split("?");
-  return new URLSearchParams(queryString);
-};
-
 const handle = (request, response) => {
-  const { url } = request;
-  request.queryParams = getQueryParams(url);
+  const { url, method } = request;
 
-  if (url === "/") {
+  if (url === "/" && method === "GET") {
     serveFile("./resources/page/index.html", response);
     return;
   };
 
-  if (url === "/guest-book") {
+  if (url === "/guest-book" && method === "GET") {
     serveGuestBook(request, response);
     return;
   };
 
-  if (url.startsWith("/guest-book/comment")) {
+  if (url === "/guest-book/comment" && method === "POST") {
     handleGuestBook(request, response);
     return;
   };

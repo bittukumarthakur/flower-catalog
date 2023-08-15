@@ -9,7 +9,7 @@ const generateCommentsElement = (comments) => {
 };
 
 const createElement = (tagName, innerText, className = "") => {
-  return `<${tagName} class="${className}">${innerText}</${tagName}>`
+  return `<${tagName} class="${className}">${innerText}</${tagName}>`;
 };
 
 module.exports = { generateCommentsElement };

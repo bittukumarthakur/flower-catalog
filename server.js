@@ -4,10 +4,10 @@ const { readFileSync } = require("node:fs");
 
 const PORT = 8000;
 
-const logger = (response) => console.log({ url: response.url });
+const logger = (response) => console.log({ url: response.url, method: response.method });
 
 const main = () => {
-  const messageLog = JSON.parse(readFileSync("./resources/users-message.json"));
+  const messageLog = JSON.parse(readFileSync("./resources/users-message.json", "utf-8"));
   const guestBookTemplate = readFileSync("./resources/page/guest-book-template.html", "utf-8");
 
   const server = http.createServer((request, response) => {
