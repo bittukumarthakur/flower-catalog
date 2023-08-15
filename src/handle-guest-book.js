@@ -1,10 +1,6 @@
 const { writeFile } = require("node:fs");
 const { generateCommentsElement } = require("./guest-book-template");
 
-const getDate = () => {
-  return new Date().toLocaleString();
-};
-
 const capitalizeWord = (word) => word[0].toUpperCase() + word.slice(1);
 
 const serveGuestBook = (request, response) => {
@@ -42,7 +38,7 @@ const handleGuestBook = (request, response) => {
 
   request.on("end", () => {
     const { name, comment } = parseParams(params);
-    const date = getDate();
+    const date = new Date();
 
     comments.unshift({ name: capitalizeWord(name), comment, date });
     saveComments(comments);
