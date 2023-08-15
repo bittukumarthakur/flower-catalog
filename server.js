@@ -1,18 +1,19 @@
 const http = require("node:http");
 const { handle } = require("./src/handler");
-const { readFileSync } = require("node:fs");
+const { readFileSync, writeFile } = require("node:fs");
+const { CommentRepository } = require("./src/comment-repository");
 
 const PORT = 8000;
 
 const logger = (response) => console.log({ url: response.url, method: response.method });
 
 const main = () => {
-  const messageLog = JSON.parse(readFileSync("./resources/users-message.json", "utf-8"));
   const guestBookTemplate = readFileSync("./resources/page/guest-book-template.html", "utf-8");
+  const commentRepository = new CommentRepository(readFileSync, writeFile);
+  commentRepository.load();
 
   const server = http.createServer((request, response) => {
-    request.messageLog = messageLog;
-    request.guestBookTemplate = guestBookTemplate;
+    request.context = { commentRepository, guestBookTemplate };
 
     logger(request);
     handle(request, response);
