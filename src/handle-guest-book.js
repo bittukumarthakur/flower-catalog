@@ -19,7 +19,7 @@ const parseParams = (params) => {
   return Object.fromEntries(commentLine.entries());
 };
 
-const handleGuestBook = (request, response) => {
+const handleGuestBookComment = (request, response) => {
   let params = "";
 
   request.on("data", (data) => {
@@ -38,6 +38,6 @@ const handleGuestBook = (request, response) => {
 };
 
 module.exports = {
-  handleGuestBook,
+  handleGuestBookComment,
   serveGuestBook
 };

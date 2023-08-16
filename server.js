@@ -1,10 +1,10 @@
 const http = require("node:http");
-const { handle } = require("./src/handler");
 const { readFileSync, writeFile } = require("node:fs");
+const { setupRoutes } = require("./src/handler");
 const { CommentRepository } = require("./src/comment-repository");
+const { RequestHandler } = require("./src/request-handle");
 
 const PORT = 8000;
-
 const logger = (response) => console.log({ url: response.url, method: response.method });
 
 const main = () => {
@@ -12,11 +12,13 @@ const main = () => {
   const commentRepository = new CommentRepository(readFileSync, writeFile);
   commentRepository.load();
 
-  const server = http.createServer((request, response) => {
-    request.context = { commentRepository, guestBookTemplate };
+  const requestHandler = new RequestHandler();
+  setupRoutes(requestHandler);
 
+  const server = http.createServer((request, response) => {
     logger(request);
-    handle(request, response);
+    request.context = { commentRepository, guestBookTemplate };
+    requestHandler.handle(request, response);
   });
 
   server.listen(PORT, () => {

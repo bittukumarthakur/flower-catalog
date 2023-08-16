@@ -1,6 +1,8 @@
-## entity to store message;
+## requestHandler;
 
-const storage = Storage(readFile,writeFile);
-storage.saveMessage(name,message);
-storage.getMessages() => [msg1,msg2];
+const requestHandler = new RequestHandler();
 
+requestHandler.DefaultRoute(handler);
+requestHandler.route({path: "/",method: "GET"},handler);
+requestHandler.route({path: "/guest-book",method: "GET"},handler);
+requestHandler.route({path: "/guest-book/comment",method: "POST"},handler);

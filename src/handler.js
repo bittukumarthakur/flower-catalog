@@ -1,5 +1,5 @@
 const { readFile } = require("node:fs");
-const { handleGuestBook, serveGuestBook } = require("./handle-guest-book");
+const { handleGuestBookComment, serveGuestBook } = require("./handle-guest-book");
 
 const MIME_TYPE = {
   html: "text/html",
@@ -33,29 +33,25 @@ const serveFile = (filepath, response) => {
   });
 };
 
-const handle = (request, response) => {
-  const { url, method } = request;
-
-  if (url === "/" && method === "GET") {
-    serveFile("./resources/page/index.html", response);
-    return;
-  };
-
-  if (url === "/guest-book" && method === "GET") {
-    serveGuestBook(request, response);
-    return;
-  };
-
-  if (url === "/guest-book/comment" && method === "POST") {
-    handleGuestBook(request, response);
-    return;
-  };
-
-  const path = "." + url;
+const serveHomePage = (request, response) => {
+  const path = "./resources/page/index.html";
   serveFile(path, response);
-  return;
+};
+
+const defaultHandler = (request, response) => {
+  const path = "." + request.url;
+  serveFile(path, response);
+};
+
+const setupRoutes = (requestHandler) => {
+  requestHandler.defaultRoute(defaultHandler);
+  requestHandler.route({ url: "/", method: "GET" }, serveHomePage);
+  requestHandler.route({ url: "/guest-book", method: "GET" }, serveGuestBook);
+  requestHandler.route({ url: "/guest-book/comment", method: "POST" }, handleGuestBookComment);
 };
 
 module.exports = {
-  handle
+  serveHomePage,
+  defaultHandler,
+  setupRoutes
 };
