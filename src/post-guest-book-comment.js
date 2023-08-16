@@ -1,13 +1,4 @@
-const { generateCommentsElement } = require("./guest-book-template");
-
 const capitalizeWord = (word) => word[0].toUpperCase() + word.slice(1);
-
-const serveGuestBook = (request, response) => {
-  const { commentRepository, guestBookTemplate } = request.context;
-  const commentsElement = generateCommentsElement(commentRepository.get()).join("\n");
-  const guestBookHtml = (guestBookTemplate.replace("--comments", commentsElement));
-  response.end(guestBookHtml);
-};
 
 const redirectToGuestPage = (request, response) => {
   response.writeHead(302, { location: "/guest-book" });
@@ -19,7 +10,7 @@ const parseParams = (params) => {
   return Object.fromEntries(commentLine.entries());
 };
 
-const handleGuestBookComment = (request, response) => {
+const postGuestBookComment = (request, response) => {
   let params = "";
 
   request.on("data", (data) => {
@@ -38,6 +29,5 @@ const handleGuestBookComment = (request, response) => {
 };
 
 module.exports = {
-  handleGuestBookComment,
-  serveGuestBook
+  postGuestBookComment,
 };

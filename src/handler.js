@@ -1,5 +1,5 @@
 const { readFile } = require("node:fs");
-const { handleGuestBookComment, serveGuestBook } = require("./handle-guest-book");
+const { postGuestBookComment } = require("./post-guest-book-comment");
 
 const MIME_TYPE = {
   html: "text/html",
@@ -9,7 +9,8 @@ const MIME_TYPE = {
   gif: "image/gif",
   pdf: "application/pdf",
   css: "text/css",
-  js: "text/javascript"
+  js: "text/javascript",
+  json: "application/json"
 };
 
 const getContentType = (extensionType) => ({ "Content-Type": MIME_TYPE[extensionType] });
@@ -43,15 +44,27 @@ const defaultHandler = (request, response) => {
   serveFile(path, response);
 };
 
+const serveGuestBook = (request, response) => {
+  const path = "./resources/page/guest-book.html";
+  serveFile(path, response);
+};
+
+const serveComments = (request, response) => {
+  const { commentRepository } = request.context;
+  const comments = commentRepository.get();
+  response.writeHead(200, getContentType("json"));
+  response.end(JSON.stringify(comments));
+};
+
+
 const setupRoutes = (requestHandler) => {
   requestHandler.defaultRoute(defaultHandler);
   requestHandler.route({ url: "/", method: "GET" }, serveHomePage);
   requestHandler.route({ url: "/guest-book", method: "GET" }, serveGuestBook);
-  requestHandler.route({ url: "/guest-book/comment", method: "POST" }, handleGuestBookComment);
+  requestHandler.route({ url: "/guest-book/comments", method: "POST" }, postGuestBookComment);
+  requestHandler.route({ url: "/guest-book/comments", method: "GET" }, serveComments);
 };
 
 module.exports = {
-  serveHomePage,
-  defaultHandler,
   setupRoutes
 };

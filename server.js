@@ -8,16 +8,15 @@ const PORT = 8000;
 const logger = (response) => console.log({ url: response.url, method: response.method });
 
 const main = () => {
-  const guestBookTemplate = readFileSync("./resources/page/guest-book-template.html", "utf-8");
   const commentRepository = new CommentRepository(readFileSync, writeFile);
-  commentRepository.load();
-
   const requestHandler = new RequestHandler();
+
+  commentRepository.load();
   setupRoutes(requestHandler);
 
   const server = http.createServer((request, response) => {
     logger(request);
-    request.context = { commentRepository, guestBookTemplate };
+    request.context = { commentRepository };
     requestHandler.handle(request, response);
   });
 

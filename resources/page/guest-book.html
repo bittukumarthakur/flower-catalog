@@ -3,6 +3,7 @@
 <head>
   <title>Flower Catalog</title>
   <link rel="stylesheet" href="/resources/style/guest-book-style.css">
+  <script src="/resources/script/guest-book-script.js"></script>
 </head>
 
 <body>
@@ -13,7 +14,7 @@
   <div class="guest-book-page">
     <h2>Leave a comment</h2>
     <div>
-      <form action="/guest-book/comment" method="post">
+      <form action="/guest-book/comments" method="post">
 
         <label for="name">Name:</label>
         <input type="text" name="name" id="name" required>
@@ -31,13 +32,12 @@
       <div id="comments-section">
         <h2 id="comment-heading">Comments</h2>
         <div>
-          <table>
+          <table id="comment-container">
             <tr>
               <th class="date">Date</th>
               <th class="name">Name</th>
               <th class="comment">Comment</th>
             <tr>
-              --comments
           </table>
         </div>
       </div>
