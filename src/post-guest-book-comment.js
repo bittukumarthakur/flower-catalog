@@ -14,7 +14,7 @@ const postGuestBookComment = (request, response) => {
     const commentLine = { name: capitalizeWord(name), comment, date };
 
     commentRepository.save(commentLine);
-    response.writeHead(201)
+    response.writeHead(201);
     response.end();
   });
 };

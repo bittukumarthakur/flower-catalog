@@ -78,6 +78,6 @@ label[for=name] {
 }
 
 button {
-  margin: 0em 4.4em;
+  margin-left: 4.4em;
   cursor: pointer;
 }

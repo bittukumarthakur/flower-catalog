@@ -10,7 +10,7 @@ const createCommentElement = ({ name, comment, date }) => {
   const nameElement = createElement("td", name, "name");
   const commentElement = createElement("td", comment, "comment");
   const DateElement = createElement("td", localDate, "date");
-  
+
   const commentLine = document.createElement("tr");
 
   commentLine.append(DateElement, nameElement, commentElement);
@@ -40,6 +40,11 @@ const loadComments = () => {
     .then(displayComments);
 };
 
+const clearInputBox = () => {
+  const resetButton = document.querySelector("button[type=reset]");
+  resetButton.click();
+};
+
 const postComment = (event) => {
   event.preventDefault();
   const comment = getComment();
@@ -50,6 +55,7 @@ const postComment = (event) => {
   };
 
   fetch("/guest-book/comments", options)
+    .then(clearInputBox)
     .then(loadComments);
 };
 
