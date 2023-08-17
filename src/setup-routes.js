@@ -13,12 +13,23 @@ const MIME_TYPE = {
   json: "application/json"
 };
 
-const getContentType = (extensionType) => ({ "Content-Type": MIME_TYPE[extensionType] });
+const getContentHeaders = (extensionType) => ({ "Content-Type": MIME_TYPE[extensionType] });
+
+const HEADERS = {
+  html: getContentHeaders("html"),
+  ico: getContentHeaders("ico"),
+  jpg: getContentHeaders("jpg"),
+  jpeg: getContentHeaders("jpeg"),
+  gif: getContentHeaders("gif"),
+  css: getContentHeaders("css"),
+  js: getContentHeaders("js"),
+  json: getContentHeaders("json"),
+  pdf: { ...getContentHeaders("pdf"), "Content-Disposition": "attachment" }
+};
 
 const getHeaders = (filepath) => {
-  const extension = filepath.split(".").pop();
-  const pdfHeader = { ...getContentType("pdf"), "Content-Disposition": "attachment" };
-  return extension === "pdf" ? pdfHeader : getContentType(extension);
+  const extension = filepath.split(".").at(-1);
+  return HEADERS[extension];
 };
 
 const serveFile = (filepath, response) => {
@@ -35,8 +46,8 @@ const serveFile = (filepath, response) => {
 };
 
 const serveHomePage = (request, response) => {
-  const path = "./resources/page/index.html";
-  serveFile(path, response);
+  const { config: { PATHS } } = request.context;
+  serveFile(PATHS.HOME_PAGE, response);
 };
 
 const defaultHandler = (request, response) => {
@@ -45,24 +56,23 @@ const defaultHandler = (request, response) => {
 };
 
 const serveGuestBook = (request, response) => {
-  const path = "./resources/page/guest-book.html";
-  serveFile(path, response);
+  const { config: { PATHS } } = request.context;
+  serveFile(PATHS.GUEST_BOOK_PAGE, response);
 };
 
 const serveComments = (request, response) => {
   const { commentRepository } = request.context;
   const comments = commentRepository.get();
-  response.writeHead(200, getContentType("json"));
+  response.writeHead(200, getContentHeaders("json"));
   response.end(JSON.stringify(comments));
 };
 
-
-const setupRoutes = (requestHandler) => {
-  requestHandler.defaultRoute(defaultHandler);
-  requestHandler.route({ url: "/", method: "GET" }, serveHomePage);
-  requestHandler.route({ url: "/guest-book", method: "GET" }, serveGuestBook);
-  requestHandler.route({ url: "/guest-book/comments", method: "POST" }, postGuestBookComment);
-  requestHandler.route({ url: "/guest-book/comments", method: "GET" }, serveComments);
+const setupRoutes = (router) => {
+  router.fallback(defaultHandler);
+  router.route("/", "GET", serveHomePage);
+  router.route("/guest-book", "GET", serveGuestBook);
+  router.route("/guest-book/comments", "POST", postGuestBookComment);
+  router.route("/guest-book/comments", "GET", serveComments);
 };
 
 module.exports = {

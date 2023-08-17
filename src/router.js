@@ -1,4 +1,4 @@
-class RequestHandler {
+class Router {
   #routes;
   #defaultHandler;
 
@@ -6,18 +6,17 @@ class RequestHandler {
     this.#routes = [];
   }
 
-  route(requestLine, handler) {
-    // requestLine = {url , method} - think about name;
-    this.#routes.push({ requestLine, handler });
+  route(url, method, handler) {
+    this.#routes.push({ url, method, handler });
   }
 
-  defaultRoute(handler) {
+  fallback(handler) {
     this.#defaultHandler = handler;
   }
 
   #findHandler(url, method) {
-    const route = this.#routes.find(({ requestLine }) => {
-      return requestLine.url === url && requestLine.method === method;
+    const route = this.#routes.find((route) => {
+      return route.url === url && route.method === method;
     });
 
     return route ? route.handler : this.#defaultHandler;
@@ -30,4 +29,4 @@ class RequestHandler {
   }
 };
 
-module.exports = { RequestHandler };
+module.exports = { Router };

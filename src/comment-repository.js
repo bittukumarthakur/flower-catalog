@@ -1,19 +1,12 @@
 class CommentRepository {
-  #readFileSync;
   #writeFile;
   #comments;
   #filePath;
 
-  constructor(readFileSync, writeFile) {
-    this.#readFileSync = readFileSync;
+  constructor(comments, writeFile) {
     this.#writeFile = writeFile;
-    this.#comments = [];
-    this.#filePath = "./resources/users-message.json";
-  }
-
-  load() {
-    const rawMessages = this.#readFileSync(this.#filePath, "utf-8");
-    this.#comments = JSON.parse(rawMessages);
+    this.#comments = comments;
+    this.#filePath = "./resources/comments.json";
   }
 
   save(message) {

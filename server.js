@@ -1,23 +1,32 @@
 const http = require("node:http");
 const { readFileSync, writeFile } = require("node:fs");
-const { setupRoutes } = require("./src/handler");
+const { setupRoutes } = require("./src/setup-routes");
 const { CommentRepository } = require("./src/comment-repository");
-const { RequestHandler } = require("./src/request-handle");
+const { Router } = require("./src/router");
 
 const PORT = 8000;
-const logger = (response) => console.log({ url: response.url, method: response.method });
+const config = {
+  PATHS: {
+    HOME_PAGE: "./resources/page/index.html",
+    GUEST_BOOK_PAGE: "./resources/page/guest-book.html",
+    COMMENTS: "./resources/comments.json"
+  }
+};
+
+const logger = ({ url, method }) => console.log({ url, method });
 
 const main = () => {
-  const commentRepository = new CommentRepository(readFileSync, writeFile);
-  const requestHandler = new RequestHandler();
-
-  commentRepository.load();
-  setupRoutes(requestHandler);
+  console.log(config.PATHS.COMMENTS);
+  const rawComments = readFileSync(config.PATHS.COMMENTS, "utf-8");
+  const comments = JSON.parse(rawComments);
+  const commentRepository = new CommentRepository(comments, writeFile);
+  const router = new Router();
+  setupRoutes(router);
 
   const server = http.createServer((request, response) => {
     logger(request);
-    request.context = { commentRepository };
-    requestHandler.handle(request, response);
+    request.context = { commentRepository, config };
+    router.handle(request, response);
   });
 
   server.listen(PORT, () => {
