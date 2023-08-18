@@ -9,7 +9,8 @@ const config = {
   PATHS: {
     HOME_PAGE: "./resources/page/index.html",
     GUEST_BOOK_PAGE: "./resources/page/guest-book.html",
-    COMMENTS: "./resources/comments.json"
+    COMMENTS: "./resources/comments.json",
+    LOGIN_PAGE: "./resources/page/login.html"
   }
 };
 

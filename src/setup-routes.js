@@ -55,8 +55,24 @@ const defaultHandler = (request, response) => {
   serveFile(path, response);
 };
 
+const redirectToLogin = (request, response) => {
+  response.writeHead(303, { "Location": "/login" });
+  response.end();
+};
+
+const isNewUser = (request) => {
+  const { cookie } = request.headers;
+  return cookie ? false : true;
+};
+
 const serveGuestBook = (request, response) => {
   const { config: { PATHS } } = request.context;
+
+  if (isNewUser(request)) {
+    redirectToLogin(request, response);
+    return;
+  };
+
   serveFile(PATHS.GUEST_BOOK_PAGE, response);
 };
 
@@ -67,14 +83,41 @@ const serveComments = (request, response) => {
   response.end(JSON.stringify(comments));
 };
 
+const serveLoginPage = (request, response) => {
+  const { config: { PATHS } } = request.context;
+  if (isNewUser(request)) {
+    serveFile(PATHS.LOGIN_PAGE, response);
+    return;
+  }
+
+  response.writeHead(303, { "Location": "/guest-book" });
+  response.end();
+};
+
+const registerUser = (request, response) => {
+  let body = "";
+  request.on("data", (data) => body += data);
+
+  request.on("end", () => {
+    const [key, userName] = body.split("=");
+    response.setHeader("Set-Cookie", `userName=${userName}`);
+    response.writeHead(303, { "Location": "/guest-book" });
+    response.end();
+  });
+};
+
 const setupRoutes = (router) => {
   router.fallback(defaultHandler);
   router.route("/", "GET", serveHomePage);
   router.route("/guest-book", "GET", serveGuestBook);
   router.route("/guest-book/comments", "POST", postGuestBookComment);
   router.route("/guest-book/comments", "GET", serveComments);
+  router.route("/login", "GET", serveLoginPage);
+  router.route("/login", "POST", registerUser);
 };
 
 module.exports = {
-  setupRoutes
+  setupRoutes,
+  isNewUser,
+  redirectToLogin
 };
