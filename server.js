@@ -1,6 +1,6 @@
 const http = require("node:http");
-const { readFileSync, writeFile } = require("node:fs");
-const { setupRoutes } = require("./src/setup-routes");
+const { writeFile } = require("node:fs");
+const { setupRoutes, getComment } = require("./src/setup-routes");
 const { CommentRepository } = require("./src/comment-repository");
 const { Router } = require("./src/router");
 
@@ -17,9 +17,7 @@ const config = {
 const logger = ({ url, method }) => console.log({ url, method });
 
 const main = () => {
-  console.log(config.PATHS.COMMENTS);
-  const rawComments = readFileSync(config.PATHS.COMMENTS, "utf-8");
-  const comments = JSON.parse(rawComments);
+  const comments = getComment(config.PATHS.COMMENTS);
   const commentRepository = new CommentRepository(comments, writeFile);
   const router = new Router();
   setupRoutes(router);

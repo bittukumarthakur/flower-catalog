@@ -2,7 +2,7 @@ const capitalizeWord = (word) => word[0].toUpperCase() + word.slice(1);
 
 const getUserName = (request) => {
   const { cookie } = request.headers;
-  return cookie.split("=").at(-1);
+  return new URLSearchParams(cookie).get("username");
 };
 
 const saveComment = (request, body) => {
@@ -18,9 +18,15 @@ const saveComment = (request, body) => {
 const postGuestBookComment = (request, response) => {
   let body = "";
 
-  request.on("data", (data) => body += data);
+  if (!getUserName(request)) {
+    response.writeHead(303, { "Location": "/login" });
+    response.end();
+    return;
+  };
 
+  request.on("data", (data) => body += data);
   request.on("end", () => {
+    console.log("post comment", body);
     saveComment(request, body);
     response.writeHead(201);
     response.end();

@@ -8,7 +8,12 @@
 
 <body>
   <header>
-    <h1><a href="/">&lt;&lt;</a>Guest Book</h1>
+    <a href="/">&lt;&lt;</a>
+    <h1>Guest Book</h1>
+    <div>
+      <span id="user-name"></span>
+      <a href="/logout" id="logout">Logout</a>
+    </div>
   </header>
 
   <div class="guest-book-page">
@@ -16,9 +21,6 @@
     <div>
 
       <form action="/guest-book/comments" method="POST">
-        <!-- <label for="name">Name:</label> -->
-        <!-- <input type="text" name="name" id="name" required> -->
-
         <div id="comment-box">
           <label for="comment">Comment:</label>
           <textarea name="comment" id="comment" cols="30" rows="3" required></textarea>

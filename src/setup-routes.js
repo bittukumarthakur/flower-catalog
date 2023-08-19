@@ -1,5 +1,14 @@
-const { readFile } = require("node:fs");
+const fs = require("node:fs");
 const { postGuestBookComment } = require("./post-guest-book-comment");
+
+const getComment = (path) => {
+  try {
+    return JSON.parse(fs.readFileSync(path, "utf-8"));
+  } catch (error) {
+    fs.writeFileSync(path, "[]");
+    return [];
+  }
+};
 
 const MIME_TYPE = {
   html: "text/html",
@@ -33,7 +42,7 @@ const getHeaders = (filepath) => {
 };
 
 const serveFile = (filepath, response) => {
-  readFile(filepath, (error, body) => {
+  fs.readFile(filepath, (error, body) => {
     if (error) {
       response.statusCode = 404;
       response.end("Not Found");
@@ -99,11 +108,17 @@ const registerUser = (request, response) => {
   request.on("data", (data) => body += data);
 
   request.on("end", () => {
-    const [key, userName] = body.split("=");
-    response.setHeader("Set-Cookie", `userName=${userName}`);
+    const [key, username] = body.split("=");
+    response.setHeader("Set-Cookie", `username=${username}`);
     response.writeHead(303, { "Location": "/guest-book" });
     response.end();
   });
+};
+
+const logoutUser = (request, response) => {
+  response.setHeader("Set-Cookie", `username=; Max-Age=0`);
+  response.writeHead(303, { "Location": "/" });
+  response.end();
 };
 
 const setupRoutes = (router) => {
@@ -114,10 +129,10 @@ const setupRoutes = (router) => {
   router.route("/guest-book/comments", "GET", serveComments);
   router.route("/login", "GET", serveLoginPage);
   router.route("/login", "POST", registerUser);
+  router.route("/logout", "GET", logoutUser);
 };
 
 module.exports = {
   setupRoutes,
-  isNewUser,
-  redirectToLogin
+  getComment
 };

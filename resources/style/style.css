@@ -9,12 +9,39 @@ h1 {
   font-size: 1em;
 }
 
-header {
+#logo {
+  padding-left: 5em;
+}
+
+.button {
+  color: black;
+  text-decoration: none;
+  border: 1px solid black;
+  padding: .3em;
+  margin-left: 1em;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px grey;
+}
+
+.button:active {
+  box-shadow: none;
+}
+
+header,
+#home-page-header {
   font-size: 1.5em;
   text-align: center;
   padding: .5em;
   border-bottom: 2px solid black;
   color: orange;
+
+}
+
+#home-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .page {
@@ -71,4 +98,8 @@ li {
 
 #guest-book {
   padding-left: 2em;
+}
+
+.black {
+  color: black;
 }

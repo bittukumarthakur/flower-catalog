@@ -1,8 +1,4 @@
-## requestHandler;
+## todo
+ create json file if it is not available;
+ check user name not cookie for validation;
 
-const requestHandler = new RequestHandler();
-
-requestHandler.DefaultRoute(handler);
-requestHandler.route({path: "/",method: "GET"},handler);
-requestHandler.route({path: "/guest-book",method: "GET"},handler);
-requestHandler.route({path: "/guest-book/comment",method: "POST"},handler);

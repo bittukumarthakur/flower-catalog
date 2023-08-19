@@ -55,14 +55,23 @@ const postComment = (event) => {
   };
 
   fetch("/guest-book/comments", options)
-    .then(clearInputBox)
-    .then(loadComments);
+    .then(loadComments)
+    .then(clearInputBox);
+};
+
+const displayUserName = () => {
+  const cookie = document.cookie;
+  const username = new URLSearchParams(cookie).get("username");
+  const usernameContainer = document.querySelector("#user-name");
+  usernameContainer.innerText = username;
 };
 
 const main = () => {
   const submitButton = document.querySelector("button[type=submit]");
-  submitButton.onclick = postComment;
+  displayUserName();
   loadComments();
+
+  submitButton.onclick = postComment;
 };
 
 window.onload = main;
